@@ -10,7 +10,11 @@
 }
 
 :root {
+    --app-background-color: hsl(235, 44%, 20%);
+    --text-color: #ccc;
 
+    --correct-score-color: yellowgreen;
+    --wrong-score-color: orangered;
 }
 
 html {
@@ -19,8 +23,6 @@ html {
 
 #app {
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--app-background-color);
 }
