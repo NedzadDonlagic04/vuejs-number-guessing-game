@@ -2,22 +2,31 @@
 import { ref } from 'vue';
 
 const highScore = ref(0);
-
 const score = ref(0);
+const guessingInput = ref(null);
+
+const guessingFormSubmitEvent = e => {
+    e.preventDefault();
+
+    const inputValue = guessingInput.value.value;
+
+    console.log(inputValue);
+}
 
 </script>
 
 <template>
     <header>
         <h1>Number Guessing Game</h1>
+        <p>Guess a number between 1 and 20 (including 1 and 20)</p>
     </header>
 
     <main>
         <p class="high-score">High Score: {{highScore}}</p>
         <p class="score">Score: {{score}}</p>
 
-        <form class="guessing-form">
-            <input class="guessing-input" type="number" name="user-guess" id="user-guess">
+        <form class="guessing-form" @submit="guessingFormSubmitEvent">
+            <input class="guessing-input" ref="guessingInput" type="number" min="1" max="20" name="user-guess" id="user-guess">
             <button class="guessing-button">Guess</button>
         </form>
     </main>
@@ -38,9 +47,15 @@ const score = ref(0);
         align-content: center;
     }
 
+    header > p,
     main > p {
         color: var(--text-color);
         text-align: center;
+    }
+
+    header > p {
+        margin-top: 1rem;
+        font-size: 1.2rem;
     }
 
     .high-score {
