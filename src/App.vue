@@ -3,19 +3,46 @@ import { ref } from 'vue';
 
 const highScore = ref(0);
 const score = ref(0);
+
 const guessingInput = ref(null);
+const scoreParagraph = ref(null);
+
+if(localStorage.getItem('highScore') === null) {
+    localStorage.setItem('highScore', highScore.value);
+} else {
+    highScore.value = JSON.parse(localStorage.getItem('highScore'));
+}
 
 const getRandomNumber = () => Math.floor(Math.random() * 20 + 1);
 
 const guessingFormSubmitEvent = e => {
     e.preventDefault();
 
+    if(scoreParagraph.value.classList.length !== 1) {
+        guessingTransitionEndEvent();
+        return;
+    }
+
     const generatedNumber = getRandomNumber();
     const guessedNumber = Number(guessingInput.value.value);
 
-    if(generatedNumber === guessedNumber) console.log('correct');
-    else console.log('error');
+    if(generatedNumber === guessedNumber) {
+        score.value++;
+        scoreParagraph.value.classList.add('correct');
+
+        if(score.value > highScore.value) {
+            highScore.value = score.value;
+            localStorage.setItem('highScore', highScore.value);
+        }
+
+        return;
+    }
+
+    score.value = 0;
+    scoreParagraph.value.classList.add('wrong');
 }
+
+const guessingTransitionEndEvent = () => scoreParagraph.value.classList = 'score';
 
 </script>
 
@@ -27,7 +54,7 @@ const guessingFormSubmitEvent = e => {
 
     <main>
         <p class="high-score">High Score: {{highScore}}</p>
-        <p class="score">Score: {{score}}</p>
+        <p class="score" ref="scoreParagraph" @transitionend="guessingTransitionEndEvent">Score: {{score}}</p>
 
         <form class="guessing-form" @submit="guessingFormSubmitEvent">
             <input class="guessing-input" ref="guessingInput" type="number" min="1" max="20" name="user-guess" id="user-guess" required>
@@ -70,36 +97,17 @@ const guessingFormSubmitEvent = e => {
     .score {
         margin-top: 5rem;
         font-size: 1.5rem;
-        animation-duration: .7s;
+        transition: all .7s ease;
     }
 
-    @keyframes correct {
-        50% {
-            color: var(--correct-score-color);
-            font-size: 2.5rem;
-        }
+    .correct {
+        color: var(--correct-score-color);
+        transform: scale(1.7);
     }
 
-    @keyframes wrong {
-        25% {
-            color: var(--wrong-score-color);
-            font-size: 2.5rem;
-            transform: translateX(-3.5rem);
-        }
-        50% {
-            color: var(--wrong-score-color);
-            font-size: 2.5rem;
-            transform: translateX(3.5rem);
-        }
-        75% {
-            color: var(--wrong-score-color);
-            font-size: 2.5rem;
-            transform: translateX(-3.5rem);
-        }
-        100% {
-            transform: translateX(0);
-            color: var(--wrong-score-color);
-        }
+    .wrong {
+        color: var(--wrong-score-color);
+        transform: translateY(3rem) rotate(30deg);
     }
 
     .guessing-form {
