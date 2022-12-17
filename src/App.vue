@@ -5,12 +5,16 @@ const highScore = ref(0);
 const score = ref(0);
 const guessingInput = ref(null);
 
+const getRandomNumber = () => Math.floor(Math.random() * 20 + 1);
+
 const guessingFormSubmitEvent = e => {
     e.preventDefault();
 
-    const inputValue = guessingInput.value.value;
+    const generatedNumber = getRandomNumber();
+    const guessedNumber = Number(guessingInput.value.value);
 
-    console.log(inputValue);
+    if(generatedNumber === guessedNumber) console.log('correct');
+    else console.log('error');
 }
 
 </script>
@@ -26,7 +30,7 @@ const guessingFormSubmitEvent = e => {
         <p class="score">Score: {{score}}</p>
 
         <form class="guessing-form" @submit="guessingFormSubmitEvent">
-            <input class="guessing-input" ref="guessingInput" type="number" min="1" max="20" name="user-guess" id="user-guess">
+            <input class="guessing-input" ref="guessingInput" type="number" min="1" max="20" name="user-guess" id="user-guess" required>
             <button class="guessing-button">Guess</button>
         </form>
     </main>
